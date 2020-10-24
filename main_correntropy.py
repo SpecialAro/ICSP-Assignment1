@@ -24,38 +24,38 @@ def regressao_linear(x, y):
 
 
 def gaussiana(Y,m,X,b, var):
-    gauss = 1 / (var * math.sqrt(2 * math.pi)) * math.exp(-1 / 2 * ((Y-m*X+b ** 2) / (var ** 2)))
+    gauss = 1 / (var * math.sqrt(2 * math.pi)) * math.exp(-1 / 2 * (((m*X+b - Y)** 2) / (var ** 2)))
     # gauss = E+var
     return gauss
 
-def df1_mb(X, Y, var, m, b):
+def df1_mb(x, y, var, m, b):
     i = 0
     F = 0
     for x in X:
-        f = 1 / (var * math.sqrt(2 * math.pi)) * (2 * Y[i] * x - 2 * x * b - 2 * m * (x ** 2)) * math.exp(
-            ((-Y[i] ** 2) + 2 * Y[i] * m * x - 2 * m * x * b + 2 * Y[i] * b - (m ** 2) * (x ** 2) - (b ** 2)) / (
-                        2 * (var ** 2)))
+        # f = 1 / (var * math.sqrt(2 * math.pi)) * (2 * Y[i] * x - 2 * x * b - 2 * m * (x ** 2)) * math.exp(
+        #     ((-Y[i] ** 2) + 2 * Y[i] * m * x - 2 * m * x * b + 2 * Y[i] * b - (m ** 2) * (x ** 2) - (b ** 2)) / (
+        #                 2 * (var ** 2)))
+        f = 1/(var * math.sqrt(2 * math.pi)) * (2*m*(x**2)+2*b*x-2*y[i]*x) * math.exp(-1*(((m*x+b-y[i])**2)/(2 * (var ** 2))))
         F = F + f
         i = i + 1
     return F
 
 
-def df2_mb(X, Y, var, m, b):
+def df2_mb(x, y, var, m, b):
     i = 0
     F = 0
     for x in X:
-        f = 1 / (var * math.sqrt(2 * math.pi)) * (-2 * m * x + 2 * Y[i] - 2 * b) * math.exp(
-            ((-Y[i] ** 2) + 2 * Y[i] * m * x - 2 * m * x * b + 2 * Y[i] * b - (m ** 2) * (x ** 2) - (b ** 2)) / (
-                        2 * (var ** 2)))
+        # f = 1 / (var * math.sqrt(2 * math.pi)) * (-2 * m * x + 2 * Y[i] - 2 * b) * math.exp(
+        #     ((-Y[i] ** 2) + 2 * Y[i] * m * x - 2 * m * x * b + 2 * Y[i] * b - (m ** 2) * (x ** 2) - (b ** 2)) / (
+        #                 2 * (var ** 2)))
+        f = 1/(var * math.sqrt(2 * math.pi)) * (2*m*x+2*b-2*y[i]) * math.exp(-1*(((m*x+b-y[i])**2)/(2 * (var ** 2))))
         F = F + f
         i = i + 1
     return F
 
-def gradient(Y, x, var):
-    m = 0
-    b = 0
-
-    k = 0.01
+def gradient(Y, x, var,k):
+    m = 1.5
+    b = 2.5
 
     max_iters = 100000
     iters = 0
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     var = 0.5
 
     [m_reg, b_reg] = regressao_linear(X, Y)
-    [m, b] = gradient(Y, X, var)
+    [m, b] = gradient(Y, X, var, k = 0.5)
 
     SomaG = 0
     i = 0
